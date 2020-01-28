@@ -1,0 +1,49 @@
+#ifndef _Lab3_B_
+#define _Lab3_B_
+#include <iostream>
+#include <cstring>
+
+namespace Hi {
+    int getNum(const char *msg);
+	void getstr (const char *msg, char *str);
+	struct Item {
+		int   m_key;							//Ключ
+		int   m_busy;							//Про busy : 0 - пусто, 1 - есть элемент, 2 - элемент удален
+		char* m_info;							//Информация
+		Item();
+		Item(int key, char* info);
+	};
+
+	class Table
+	{
+	private:
+		Item* mas;
+		int top;								//Текущий размер таблицы
+		int findindex(int k);					// Поиск индекса элемента для удаления элемента
+		void copy_array_from(Item * dest, const Item * src, int size);
+	public:
+		Table(): top(0), mas(new Item [0]){}
+		Table(const Item &);					//Заполнение
+		Table(const Table &);					//Копирующий конструктор
+		Table(Table &&);						//Перемещающий конструктор
+		Table & operator = (const Table &) ;	// Перегруженный оператор присваивания
+		Table & operator = (Table &&) ;			// Перемещающий оператор присваивания
+
+		int push(Item);							//Занесение в таблицу
+		bool exist(int);						//Выборка из таблицы
+		Table & operator += (Table &) ;			//Добавление элемента в таблицу // not friend
+		bool operator () (int) const;			//Поиск элемента в таблице 
+		Table & operator -= (int);				//not friend
+		void clear();
+		void SetN(int);
+		const char *operator [](int) const;		//double const and not const
+		int operator [](const char *) const;	//double const and not const
+		int getSize() const { return top; }		// Текущий размер таблицы
+		friend std::ostream & operator << (std::ostream & s, const Table & tab);	//Вывод таблицы //const
+		void delElem(int);
+		Item* getitem() { return mas; }
+		int topo() const { return top; }		//const
+		~Table(){delete [] mas;}
+	};
+}
+#endif
