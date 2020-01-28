@@ -1,0 +1,135 @@
+#include "..\Library\Table.h"
+using namespace std;
+using namespace Hi;
+#include <string>
+#include <string.h>
+#include <sstream>
+#include <fstream>
+int main()
+{
+
+	Table tab;
+
+	const char* MENU[] = { "1. Add", "2. Delete", "3. Find", "4. Show", "5. Clear", "6. Find info", "0. Exit" };
+	const unsigned menuSZ = sizeof(MENU) / sizeof(MENU[0]);
+
+	int menu = 1, n;
+	cout << tab;
+	std::cout << std::endl;
+	bool flag;
+	do
+	{
+		flag = true;
+		n = getNum("Enter count -> ");
+		if (n == -1)
+		{
+			return 0;
+		}
+		try
+		{
+			tab.SetN(n);
+		}
+		catch (std::exception & ex)
+		{
+			flag = false;
+			std::cout << ex.what() << std::endl;
+		}
+	} while (!flag);
+	cout << tab;
+	std::cout << std::endl;
+	bool work = true;
+	do
+	{
+		if (menu)
+			for (size_t i = 0; i != menuSZ; ++i)
+				std::cout << MENU[i] << std::endl;
+		menu = getNum(">>");
+		if (menu == -1)
+		{
+			return 0;
+		}
+		int k = 0;
+		char* info = new char(255);
+		switch (menu)
+		{
+		case 0:
+		{
+			work = false;
+			break;
+		}
+		case 1:
+		{
+			k = getNum("Enter key -> ");
+			getstr("Enter info -> ", info);
+			Item item(k, info);
+			Table tmp(item);
+			tab += tmp;
+			break;
+		}
+		case 2:
+		{
+			k = getNum("Enter key -> ");
+			tab -= (k);
+			break;
+		}
+		case 3:
+		{
+			k = getNum("Enter key -> ");
+			if (tab(k))
+			{
+				std::cout << "Elem found! " << std::endl;
+			}
+			else
+				std::cout << "elem not found!" << std::endl;
+			break;
+		}
+		case 4:
+		{
+			cout << tab;
+			break;
+		}
+		case 5:
+		{
+			tab.clear();
+			break;
+		}
+		case 6:
+		{
+			k = getNum("Enter key -> ");
+			const char* info = (tab[k]);
+			if (info)
+			{
+				std::cout << "Info found! -> " << std::string(info) << endl;
+			}
+			if (info == 0)
+			{
+				std::cout << "Info not found!" << endl;
+			}
+			break;
+		}
+		default:
+		{
+			std::cout << "Enter error, try again" << std::endl;
+			break;
+		}
+
+		if (MENU)
+		{
+			std::cout << "Enter 0 to continue, any number to show menu once again, ctrl+z to leave" << std::endl;
+			do
+			{
+				std::cout << ">>";
+				std::cin.ignore(255, '\n');
+				if (std::cin.eof())
+					work = false;
+				else
+				{
+					if (!(std::cin.good()))
+						std::cout << "Enter error, try again" << std::endl;
+				}
+			} while ((work) && !(std::cin.good()));
+		}
+		}
+	} while (work);
+	return 0;
+}
