@@ -1,0 +1,118 @@
+#pragma warning(disable:4996)
+#include "..\Library\Table.h"
+#include "c:\Distrib\gtest-1_7_0-rc1\gtest-1.7.0\include\gtest\gtest.h"
+#include "conio.h"
+using namespace Hi;
+using namespace std;
+
+
+// Проверяет число
+TEST(TestList, FindInfo)
+{
+	Table tab;
+	Item item1(1, (char*) "First");
+	Item item2(2, (char*) "Second");
+	Item item3(3, (char*) "Third");
+	Table tmp1(item1);
+	Table tmp2(item2);
+	Table tmp3(item3);
+	tab += tmp1;
+	tab += tmp2;
+	tab += tmp3;
+	cout << tab;
+	ASSERT_STREQ((const char*)(tab.getitem())[0].m_info, (const char*)("First"));
+	ASSERT_STREQ((const char*)(tab.getitem())[1].m_info, (const char*)("Second"));
+	}
+
+TEST(TestList, Copy) {
+	Table tab1;
+	Table tmp(Item(1, (char*) "First"));
+	tab1 += tmp;
+	Table tab2(tab1);
+	cout << tab1 << endl;
+	cout << tab2 << endl;
+
+	ASSERT_EQ((tab1.getitem())[0].m_key, (tab2.getitem())[0].m_key);
+	ASSERT_STREQ((const char*) (tab1.getitem())[0].m_info, (const char *)(tab2.getitem())[0].m_info);
+}
+/*
+TEST(TestList, Exception) {
+	Table tab;
+	Item arrI[] = { Item(1,(char*) "odin"), Item(2,(char*) "Dva"), Item(3,(char*) "Tri") };
+	Table tab1, tab2;
+	Item item;
+	for (int i = 0; i < 3; i++)
+	{
+		Table tmp(arrI[i]);
+		tab1 += tmp;
+	}
+	ASSERT_ANY_THROW((tab2 += tab1));
+	cout << tab2;
+	
+
+	/*ASSERT_EQ((tab1.getitem())[0].m_key, (tab2.getitem())[0].m_key);
+	ASSERT_STREQ((const char*)(tab1.getitem())[0].m_info, (const char*)(tab2.getitem())[0].m_info);*/
+//}
+
+TEST(TestList, Ravno) 
+{
+	Item arrI[] = { Item(1,(char*) "odin"), Item(2,(char*) "Dva"), Item(3,(char*) "Tri") };
+	Table tab1, tab2;
+	for (int i = 0; i < 3; i++)
+	{
+		Table tmp(arrI[i]);
+		tab1 += tmp;
+	}
+	tab2 = tab1;
+	for (int i = 0; i < 3; i++)
+	{
+		ASSERT_EQ((tab1.getitem())[i].m_key, (tab2.getitem())[i].m_key);
+		ASSERT_STREQ((const char*)(tab1.getitem())[i].m_info, (const char*)(tab2.getitem())[i].m_info); 
+	}
+
+
+	ASSERT_EQ((tab1.getitem())[0].m_key, (tab2.getitem())[0].m_key);
+	ASSERT_STREQ((const char*)(tab1.getitem())[0].m_info, (const char*)(tab2.getitem())[0].m_info);
+}
+
+
+TEST(TestList, Find)
+{
+	Table tab;
+	Item item1(1, (char*) "First");
+	Item item2(2, (char*) "Second");
+	Table tmp1(item1);
+	Table tmp2(item2);
+	tab += tmp1;
+	tab += tmp2;
+	cout << tab;
+	EXPECT_EQ(tab(2), true);
+	tab -= (2);
+	EXPECT_EQ(tab(2), false);
+}
+
+TEST(TestList, Delete)
+{
+	Table tab;
+	Table tmp1(Item(1, (char*) "First"));
+	Table tmp2(Item(2, (char*) "Second"));
+	Table tmp3(Item(3, (char*) "Third"));
+	tab += tmp1;
+	tab += tmp2;
+	tab += tmp3;
+	ASSERT_EQ(tab.topo(), 3);
+	cout << tab;
+	tab -= tab(2);
+	tab.clear();
+	ASSERT_EQ(tab.topo(), 2);
+}
+
+
+
+
+int main(int argc, char** argv)
+{
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}
+
